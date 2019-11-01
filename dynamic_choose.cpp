@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <queue>
 #include <cstring>
+#include <iostream>
 #include <vector>
 using namespace std;
 typedef vector<int> vi;
@@ -9,8 +10,8 @@ int counter[600010] = {0};
 int src[600010], des[600010];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
-int optimal, V, E;
-int alpha = 5;
+int optimal = 0, V, E, cur;
+int alpha = 8;
 
 double loss[4010], gain[4010];
 int valid_score[4010];
@@ -46,10 +47,21 @@ int dychoose(int &cur_count) {
 	}
 }
 
-int iterations = 1e3;
+int iterations = 1e5;
 void dymwvc() {
 	int cur_count = 0;
 	for (int k = 0; k < iterations; k++) {
+		// cout << "==========" << endl;
+		// for (int i = 0; i < V; i++) {
+		// 	if (choose[i]) printf("%d ", i);
+		// }
+		// cout << endl;
+		
+		// for (int i = 0; i < E; i++) {
+		// 	cout << src[i] << " " << des[i] << " " << counter[i] << endl;
+		// }
+		// cout <<  endl << "==========" << endl;
+
 		double min_loss = 2e9, idx = 0;
 		for (int i = 0; i < V; i++) {
 			if (choose[i]) {
@@ -86,6 +98,7 @@ void dymwvc() {
 			}
 			counter[AL[v][i]]--;
 		}
+
 		int costChange = -1 * (w[u] + w[v]);
 		for (int i = 0; i < AL[u].size(); i++) {
 			if (counter[AL[u][i]] == 0) {
@@ -103,7 +116,7 @@ void dymwvc() {
 					} else {
 						loss[neigh]--;
 					}
-					counter[AL[rm][i]]++;
+					counter[AL[rm][j]]++;
 				}
 			}
 		}
@@ -123,12 +136,14 @@ void dymwvc() {
 					} else {
 						loss[neigh]--;
 					}
-					counter[AL[rm][i]]++;
+					counter[AL[rm][j]]++;
 				}
 			}
 		}
 
-		if (costChange < 0) {
+		cur = cur + costChange;
+		if (cur < optimal) {
+			optimal = cur;
 			memcpy(optimal_choose, choose, sizeof(bool) * V);
 		} else {
 			cur_count++;
@@ -151,6 +166,7 @@ int main() {
 		AL[des[i]].emplace_back(i);
 	}
 	initial();
+	cur = optimal;
 
 	for (int j = 0; j < V; j++) {
 		if (choose[j]) {
@@ -170,6 +186,11 @@ int main() {
 		}
 	}
 	dymwvc();
+	printf("%d\n", optimal);
+	for (int i = 0; i < V; i++) {
+		if (optimal_choose[i]) printf("%d ", i);
+	}
+	printf("\n");
 	return 0;
 }
 
@@ -187,7 +208,7 @@ void initial() {
 			choose[i] = 1;
 			optimal += w[i];
 			for (int nb: AL[i]) {
-				counter[i]++;
+				counter[nb]++;
 			}
 		}
 	}
