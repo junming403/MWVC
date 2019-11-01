@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <queue>
 #include <cstring>
+#include <random>
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -33,9 +34,12 @@ int dychoose(int &cur_count) {
 	} else {
 		double min_loss = 2e9;
 		int idx = 0;
-		for (int i = 0; i < V; i++) {
+		mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+		int n_candidate = min(50, V/4);
+		for (int k = 0; k < n_candidate; k++) {
+			int i = rng() % V;
 			if (choose[i]) {
-				int cur = loss[i] / w[i];
+				double cur = loss[i] / w[i];
 				if (cur < min_loss) {
 					min_loss = cur;
 					idx = i;
@@ -153,7 +157,7 @@ void dymwvc() {
 
 
 int main() {
-	// freopen("input.txt", "r", stdin);
+	freopen("input.txt", "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	for (int i = 0; i < V; i++) {
@@ -212,4 +216,6 @@ void initial() {
 			}
 		}
 	}
+	memcpy(optimal_choose, choose, sizeof(bool) * V);
+
 }
