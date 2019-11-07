@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <queue>
 #include <cstring>
+#include <random>
 #include <vector>
 #include <chrono>
 using namespace std;
@@ -32,7 +33,7 @@ void initial() {
 			choose[i] = 1;
 			optimal += w[i];
 			for (int nb: AL[i]) {
-				counter[i]++;
+				counter[nb]++;
 			}
 		}
 	}
@@ -41,7 +42,7 @@ void initial() {
 int main() {
 	chrono::time_point<chrono::steady_clock> start, end;
 	start = chrono::steady_clock::now();
-	// freopen("input.txt", "r", stdin);
+	freopen("data/frb56-25-1.mis", "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	for (int i = 0; i < V; i++) {
@@ -54,15 +55,22 @@ int main() {
 		AL[des[i]].emplace_back(i);
 	}
 	initial();
-	while (1) {
-		// Search
-		end = chrono::steady_clock::now();
-		if (((chrono::duration<double>)(end-start)).count() >= 1.99) break;
-	}
+	// mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+	// for (int i = 0; i < 10; i++)
+	// printf("%d\n", rng()%100);
+	// uniform_int_distribution<int> dist(0, 100);
+	// random_device rd;
+	// for (int i = 0; i < 10; i++)
+	// printf("%d\n", dist(rd));
+	// while (1) {
+	// 	// Search
+	// 	end = chrono::steady_clock::now();
+	// 	if (((chrono::duration<double>)(end-start)).count() >= 1.99) break;
+	// }
 	printf("%d\n", optimal);
-	for (int i = 0; i < V; i++) {
-		if (choose[i]) printf("%d ", i);
-	}
+	// for (int i = 0; i < V; i++) {
+	// 	if (choose[i]) printf("%d ", i);
+	// }
 	printf("\n");
 	return 0;
 }
