@@ -167,19 +167,19 @@ void dymwvc() {
 	}
 }
 
-// vector<const char*> dataset = {
-// 	"./data/san200_0.9_1.txt",
-// 	"./data/san1000.txt",
-// 	"./data/C2000.5.txt",
-// 	"./data/p_hat1500-2.txt",
-// 	"./data/brock800_4.txt",
-// 	"./data/frb59-26-1.mis",
-// 	"./data/DSJC1000_5.txt",
-// };
+vector<const char*> dataset = {
+	"./data/san200_0.9_1.txt",
+	"./data/san1000.txt",
+	"./data/C2000.5.txt",
+	"./data/p_hat1500-2.txt",
+	"./data/brock800_4.txt",
+	"./data/frb59-26-1.mis",
+	"./data/DSJC1000_5.txt",
+};
 
 int main() {
 	start = chrono::steady_clock::now();
-	// freopen(dataset[2], "r", stdin);
+	freopen(dataset[1], "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	for (int i = 0; i < V; i++) {
@@ -208,10 +208,10 @@ int main() {
 	}
 	dymwvc();
 	printf("%d\n", optimal);
-	for (int i = 0; i < V; i++) {
-		if (optimal_choose[i]) printf("%d ", i);
-	}
-	printf("\n");
+	// for (int i = 0; i < V; i++) {
+	// 	if (optimal_choose[i]) printf("%d ", i);
+	// }
+	// printf("\n");
 	return 0;
 }
 
