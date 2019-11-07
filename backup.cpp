@@ -43,9 +43,9 @@ int dychoose(int &cur_count) {
 		mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 		chrono::time_point<chrono::steady_clock> end;
 		end = chrono::steady_clock::now();
-		// double div = ((chrono::duration<double>)(end-start)).count() * 9.0;
-		// int n_candidate = max(V / (20 - div), 1.0);
-		int n_candidate = V / 7;
+		double div = ((chrono::duration<double>)(end-start)).count() * 9.0;
+		int n_candidate = max(V / (20 - div), 1.0);
+		// int n_candidate = V / 7;
 		while (n_candidate > 0) {
 			int i = rng() % V;
 			if (choose[i]) {
@@ -182,7 +182,7 @@ void dymwvc() {
 
 int main() {
 	start = chrono::steady_clock::now();
-	freopen("data/frb59-26-1.mis", "r", stdin);
+	freopen("./data/c125.9.txt", "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	int sum = 0;
