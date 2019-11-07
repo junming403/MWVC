@@ -13,10 +13,13 @@ int src[600010], des[600010];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
-int alpha = 2;
+int alpha = 3;
 
 double loss[4010];
 int valid_score[4010];
+chrono::time_point<chrono::steady_clock> start;
+
+int turn = 0;
 
 void initial();
 int dychoose(int &cur_count) {
@@ -36,7 +39,13 @@ int dychoose(int &cur_count) {
 		double min_loss = 2e9;
 		int idx = 0;
 		mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-		int n_candidate = min(50, V/4);
+		
+		chrono::time_point<chrono::steady_clock> end;
+		// end = chrono::steady_clock::now();
+		// double div = ((chrono::duration<double>)(end-start)).count() * 4.0;
+		// int n_candidate = V / (9 - div);
+		int n_candidate = V / 5;
+
 		while (n_candidate > 0) {
 			int i = rng() % V;
 			if (choose[i]) {
@@ -52,7 +61,6 @@ int dychoose(int &cur_count) {
 		return idx;
 	}
 }
-chrono::time_point<chrono::steady_clock> start, end;
 void dymwvc() {
 	int cur_count = 0;
 	chrono::time_point<chrono::steady_clock> end;
@@ -139,42 +147,57 @@ void dymwvc() {
 	}
 }
 
+vector<const char*> tests = {
+	"data/frb35-17-1.mis",
+	"data/frb56-25-1.mis",
+	"data/frb59-26-1.mis"
+};
+
 
 int main() {
-	start = chrono::steady_clock::now();
-	freopen("data/frb59-26-1.mis", "r", stdin);
-	scanf("%d%d", &V, &E);
-	AL.assign(V, vi());
-	for (int i = 0; i < V; i++) {
-		scanf("%d", &w[i]);
-		cp_w[i] = w[i];
-	}
-	for (int i = 0; i < E; i++) {
-		scanf("%d%d", &src[i], &des[i]);
-		AL[src[i]].emplace_back(i);
-		AL[des[i]].emplace_back(i);
-	}
-	initial();
-	cur = optimal;
+	int total = 0;
+	for (auto test: tests) {
+		AL.clear();
+		memset(counter, 0, sizeof(counter));
+		memset(choose, false, sizeof(choose));
+		memset(optimal_choose, false, sizeof(optimal_choose));
+		start = chrono::steady_clock::now();
+		freopen(test, "r", stdin);
+		scanf("%d%d", &V, &E);
+		AL.assign(V, vi());
+		for (int i = 0; i < V; i++) {
+			scanf("%d", &w[i]);
+			cp_w[i] = w[i];
+		}
+		for (int i = 0; i < E; i++) {
+			scanf("%d%d", &src[i], &des[i]);
+			AL[src[i]].emplace_back(i);
+			AL[des[i]].emplace_back(i);
+		}
+		initial();
+		cur = optimal;
 
-	for (int j = 0; j < V; j++) {
-		if (choose[j]) {
-			loss[j] = 0;
-			valid_score[j] = -1 * w[j];
-			for (int i = 0; i < AL[j].size(); i++) {
-				if (counter[AL[j][i]] == 1) {
-					loss[j]++;
-					valid_score[j] += w[src[AL[j][i]] == j ? des[AL[j][i]] : src[AL[j][i]]];
+		for (int j = 0; j < V; j++) {
+			if (choose[j]) {
+				loss[j] = 0;
+				valid_score[j] = -1 * w[j];
+				for (int i = 0; i < AL[j].size(); i++) {
+					if (counter[AL[j][i]] == 1) {
+						loss[j]++;
+						valid_score[j] += w[src[AL[j][i]] == j ? des[AL[j][i]] : src[AL[j][i]]];
+					}
 				}
 			}
 		}
+		dymwvc();
+		total += optimal;
+		// printf("%d\n", optimal);
+		// for (int i = 0; i < V; i++) {
+		// 	if (optimal_choose[i]) printf("%d ", i);
+		// }
+		// printf("\n");
 	}
-	dymwvc();
-	printf("%d\n", optimal);
-	for (int i = 0; i < V; i++) {
-		if (optimal_choose[i]) printf("%d ", i);
-	}
-	printf("\n");
+	cout << "total is " << total << endl;
 	return 0;
 }
 
