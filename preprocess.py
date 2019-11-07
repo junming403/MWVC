@@ -1,5 +1,5 @@
 import os
-path = "raw"
+path = "archive"
 all_file = [os.path.join(path, fi) for fi in os.listdir(path)]
 
 for file in all_file:
