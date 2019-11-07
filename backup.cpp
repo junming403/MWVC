@@ -14,7 +14,7 @@ int src[600010], des[600010];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
-int alpha = 5;
+int alpha = 2;
 
 double dy_weight[600010] = {1};
 double loss[4010], gain[4010];
@@ -45,7 +45,7 @@ int dychoose(int &cur_count) {
 		end = chrono::steady_clock::now();
 		double div = ((chrono::duration<double>)(end-start)).count() * 9.0;
 		int n_candidate = max(V / (20 - div), 1.0);
-		// int n_candidate = V / 7;
+		// int n_candidate = 50;
 		while (n_candidate > 0) {
 			int i = rng() % V;
 			if (choose[i]) {
@@ -65,12 +65,6 @@ void dymwvc() {
 	int cur_count = 0;
 	chrono::time_point<chrono::steady_clock> end;
 	while(1) {
-		// cout << "cost is " << cur << endl;
-		// for (int i = 0; i < V; i++) {
-		// 	if (choose[i]) cout << i << " ";
-		// }
-		// cout << endl;
-
 		end = chrono::steady_clock::now();
 		if (((chrono::duration<double>)(end-start)).count() >= 1.99) break;
 
@@ -86,16 +80,14 @@ void dymwvc() {
 		}
 		int u = idx;
 		choose[u] = false;
-		int v = dychoose(cur_count);
-		choose[v] = false;
 		gain[u] = 0;
-		gain[v] = 0;
 		vector<int> nr;
 		for (int i = 0; i < AL[u].size(); i++) {
 			int neigh = src[AL[u][i]] == u ? des[AL[u][i]] : src[AL[u][i]];
 			nr.push_back(neigh);
 			if (counter[AL[u][i]] != 1) {
 				loss[neigh] += dy_weight[AL[u][i]];
+				valid_score[neigh] += w[u]; 
 			} else {
 				gain[u] += dy_weight[AL[u][i]];
 				gain[neigh] += dy_weight[AL[u][i]];
@@ -103,11 +95,16 @@ void dymwvc() {
 			counter[AL[u][i]]--;
 			if (counter[AL[u][i]] == 0) uncovered_set.insert(AL[u][i]);
 		}
+
+		int v = dychoose(cur_count);
+		choose[v] = false;
+		gain[v] = 0;
 		for (int i = 0; i < AL[v].size(); i++) {
 			int neigh = src[AL[v][i]] == v ? des[AL[v][i]] : src[AL[v][i]];
 			nr.push_back(neigh);
 			if (counter[AL[v][i]] != 1) {
 				loss[neigh] += dy_weight[AL[v][i]];
+				valid_score[neigh] += w[v];
 			} else {
 				gain[v] += dy_weight[AL[v][i]];
 				gain[neigh] += dy_weight[AL[v][i]];
@@ -120,10 +117,12 @@ void dymwvc() {
 		sort(nr.begin(), nr.end());
 		nr.erase(unique(nr.begin(), nr.end()), nr.end());
 		while (!uncovered_set.empty()) {
-			int maxGain = -1, idx;
+			double maxGain = -1;
+			int idx;
 			for (int i = 0; i < nr.size(); i++) {
-				if (!choose[nr[i]] && gain[nr[i]] > maxGain) {
-					maxGain = gain[nr[i]];
+				double curgain = gain[nr[i]] / w[nr[i]];
+				if (!choose[nr[i]] && curgain > maxGain) {
+					maxGain = curgain;
 					idx = i;
 				}
 			}
@@ -165,6 +164,7 @@ void dymwvc() {
 						int nei = src[AL[uu][i]] == uu ? des[AL[uu][i]] : src[AL[uu][i]];
 						loss[nei]+=dy_weight[AL[uu][i]];
 						counter[AL[uu][i]]--;
+						valid_score[nei] += w[uu];
 					}
 				}
 			}
@@ -182,7 +182,7 @@ void dymwvc() {
 
 int main() {
 	start = chrono::steady_clock::now();
-	freopen("./data/c125.9.txt", "r", stdin);
+	freopen("./data/brock800_4.txt", "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	int sum = 0;

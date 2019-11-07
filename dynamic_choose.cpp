@@ -40,7 +40,7 @@ int dychoose(int &cur_count) {
 		chrono::time_point<chrono::steady_clock> end;
 		end = chrono::steady_clock::now();
 		double div = ((chrono::duration<double>)(end-start)).count() * 19.0;
-		int n_candidate = V / (40 - div);
+		int n_candidate = max(V / (40 - div), 1.0);
 		while (n_candidate > 0) {
 			int i = rng() % V;
 			if (choose[i]) {
@@ -111,6 +111,16 @@ void dymwvc() {
 					} else {
 						loss[neigh]--;
 						valid_score[neigh] -= w[rm];
+						if (loss[neigh] == 0) {
+							choose[neigh] = false;
+							costChange -= w[neigh];
+							for (int k = 0; k < AL[neigh].size(); k++) {
+								int nei = src[AL[neigh][k]] == neigh ? des[AL[neigh][k]] : src[AL[neigh][k]];
+								loss[nei]++;
+								valid_score[nei] += w[neigh];
+								counter[AL[neigh][k]]--;
+							}
+						}
 					}
 					counter[AL[rm][j]]++;
 				}
@@ -131,6 +141,16 @@ void dymwvc() {
 					} else {
 						loss[neigh]--;
 						valid_score[neigh] -= w[rm];
+						if (loss[neigh] == 0) {
+							choose[neigh] = false;
+							costChange -= w[neigh];
+							for (int k = 0; k < AL[neigh].size(); k++) {
+								int nei = src[AL[neigh][k]] == neigh ? des[AL[neigh][k]] : src[AL[neigh][k]];
+								loss[nei]++;
+								valid_score[nei] += w[neigh];
+								counter[AL[neigh][k]]--;
+							}
+						}
 					}
 					counter[AL[rm][j]]++;
 				}
@@ -147,10 +167,19 @@ void dymwvc() {
 	}
 }
 
+// vector<const char*> dataset = {
+// 	"./data/san200_0.9_1.txt",
+// 	"./data/san1000.txt",
+// 	"./data/C2000.5.txt",
+// 	"./data/p_hat1500-2.txt",
+// 	"./data/brock800_4.txt",
+// 	"./data/frb59-26-1.mis",
+// 	"./data/DSJC1000_5.txt",
+// };
 
 int main() {
 	start = chrono::steady_clock::now();
-	// freopen("./data/p_hat1500-2.txt", "r", stdin);
+	// freopen(dataset[2], "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	for (int i = 0; i < V; i++) {
