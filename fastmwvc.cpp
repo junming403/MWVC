@@ -6,17 +6,19 @@
 #include <vector>
 #include <chrono>
 #include <unordered_set>
+// #include <bits/stdc++.h>
 using namespace std;
+const int ELEN = 1800010;
 typedef vector<int> vi;
 int w[4010], cp_w[4010];
-int counter[600010] = {0};
-int src[600010], des[600010];
+int counter[ELEN] = {0};
+int src[ELEN], des[ELEN];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
 int alpha = 3;
 
-double dy_weight[600010] = {1};
+double dy_weight[ELEN];
 double loss[4010], gain[4010];
 int valid_score[4010];
 
@@ -170,19 +172,27 @@ void dymwvc() {
 }
 
 vector<const char*> dataset = {
-	"./data/san200_0.9_1.txt",
-	"./data/san1000.txt",
-	"./data/C2000.5.txt",
-	"./data/p_hat1500-2.txt",
-	"./data/brock800_4.txt",
-	"./data/frb59-26-1.mis",
-	"./data/DSJC1000_5.txt",
+	"./data/keller5.txt", // 0
+	"./data/C1000.9.txt", // 1
+	"./data/C500.9.txt", // 2
+	"./data/san200_0.9_1.txt", // 3
+	"./data/san1000.txt", // 4
+	"./data/C2000.5.txt", // 5
+	"./data/p_hat1500-2.txt", // 6
+	"./data/brock800_4.txt", // 7
+	"./data/frb59-26-1.mis", // 8
+	"./data/DSJC1000_5.txt", // 9
+	"./data/MANN_a45.txt", // 10
+	"./data/C2000.9.txt", // 11
+	"./data/c-fat500-10.txt", // 12
+	"./data/gen400_p0.9_75.txt", // 13
+	"./data/hamming10-4.txt", // 14
 };
 
 
 int main() {
 	start = chrono::steady_clock::now();
-	freopen(dataset[6], "r", stdin);
+	freopen(dataset[14], "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	int sum = 0;
@@ -196,6 +206,7 @@ int main() {
 		scanf("%d%d", &src[i], &des[i]);
 		AL[src[i]].emplace_back(i);
 		AL[des[i]].emplace_back(i);
+		dy_weight[i] = 1;
 	}
 	initial();
 	cur = optimal;
