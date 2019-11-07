@@ -146,7 +146,7 @@ void dymwvc() {
 
 int main() {
 	start = chrono::steady_clock::now();
-	freopen("data/C125.9.txt", "r", stdin);
+	freopen("./data/C2000.5.txt", "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	for (int i = 0; i < V; i++) {
