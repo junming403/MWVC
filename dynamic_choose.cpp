@@ -8,8 +8,8 @@
 using namespace std;
 typedef vector<int> vi;
 int w[4010], cp_w[4010];
-int counter[600010] = {0};
-int src[600010], des[600010];
+int counter[1000010] = {0};
+int src[1000010], des[1000010];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
@@ -37,11 +37,10 @@ int dychoose(int &cur_count) {
 		double min_loss = 2e9;
 		int idx = 0;
 		mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-		// int n_candidate = min(50, V/4);
 		chrono::time_point<chrono::steady_clock> end;
 		end = chrono::steady_clock::now();
-		double div = ((chrono::duration<double>)(end-start)).count() * 9.0;
-		int n_candidate = V / (20 - div);
+		double div = ((chrono::duration<double>)(end-start)).count() * 19.0;
+		int n_candidate = V / (40 - div);
 		while (n_candidate > 0) {
 			int i = rng() % V;
 			if (choose[i]) {
@@ -76,19 +75,22 @@ void dymwvc() {
 		}
 		int u = idx;
 		choose[u] = false;
-		int v = dychoose(cur_count);
-		choose[v] = false;
 		for (int i = 0; i < AL[u].size(); i++) {
 			int neigh = src[AL[u][i]] == u ? des[AL[u][i]] : src[AL[u][i]];
-			if (counter[AL[u][i]] != 1) {
+			if (choose[neigh]) {
 				loss[neigh]++;
+				valid_score[neigh] += w[u]; 
 			}
 			counter[AL[u][i]]--;
 		}
+
+		int v = dychoose(cur_count);
+		choose[v] = false;
 		for (int i = 0; i < AL[v].size(); i++) {
 			int neigh = src[AL[v][i]] == v ? des[AL[v][i]] : src[AL[v][i]];
-			if (counter[AL[v][i]] != 1) {
+			if (choose[neigh]) {
 				loss[neigh]++;
+				valid_score[neigh] += w[v]; 
 			}
 			counter[AL[v][i]]--;
 		}
@@ -108,6 +110,7 @@ void dymwvc() {
 						valid_score[rm] += w[neigh];
 					} else {
 						loss[neigh]--;
+						valid_score[neigh] -= w[rm];
 					}
 					counter[AL[rm][j]]++;
 				}
@@ -127,6 +130,7 @@ void dymwvc() {
 						valid_score[rm] += w[neigh];
 					} else {
 						loss[neigh]--;
+						valid_score[neigh] -= w[rm];
 					}
 					counter[AL[rm][j]]++;
 				}
@@ -146,7 +150,7 @@ void dymwvc() {
 
 int main() {
 	start = chrono::steady_clock::now();
-	freopen("./data/C2000.5.txt", "r", stdin);
+	// freopen("./data/p_hat1500-2.txt", "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	for (int i = 0; i < V; i++) {
