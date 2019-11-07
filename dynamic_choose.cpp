@@ -4,6 +4,7 @@
 #include <random>
 #include <iostream>
 #include <vector>
+#include <chrono>
 using namespace std;
 typedef vector<int> vi;
 int w[4010], cp_w[4010];
@@ -12,10 +13,11 @@ int src[600010], des[600010];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
-int alpha = 8;
+int alpha = 3;
 
-double loss[4010], gain[4010];
+double loss[4010];
 int valid_score[4010];
+chrono::time_point<chrono::steady_clock> start;
 
 void initial();
 int dychoose(int &cur_count) {
@@ -35,10 +37,15 @@ int dychoose(int &cur_count) {
 		double min_loss = 2e9;
 		int idx = 0;
 		mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-		int n_candidate = min(50, V/4);
-		for (int k = 0; k < n_candidate; k++) {
+		// int n_candidate = min(50, V/4);
+		chrono::time_point<chrono::steady_clock> end;
+		end = chrono::steady_clock::now();
+		double div = ((chrono::duration<double>)(end-start)).count() * 9.0;
+		int n_candidate = V / (20 - div);
+		while (n_candidate > 0) {
 			int i = rng() % V;
 			if (choose[i]) {
+				n_candidate--;
 				double cur = loss[i] / w[i];
 				if (cur < min_loss) {
 					min_loss = cur;
@@ -50,21 +57,12 @@ int dychoose(int &cur_count) {
 		return idx;
 	}
 }
-
-int iterations = 1e5;
 void dymwvc() {
 	int cur_count = 0;
-	for (int k = 0; k < iterations; k++) {
-		// cout << "==========" << endl;
-		// for (int i = 0; i < V; i++) {
-		// 	if (choose[i]) printf("%d ", i);
-		// }
-		// cout << endl;
-		
-		// for (int i = 0; i < E; i++) {
-		// 	cout << src[i] << " " << des[i] << " " << counter[i] << endl;
-		// }
-		// cout <<  endl << "==========" << endl;
+	chrono::time_point<chrono::steady_clock> end;
+	while(1) {
+		end = chrono::steady_clock::now();
+		if (((chrono::duration<double>)(end-start)).count() >= 1.99) break;
 
 		double min_loss = 2e9, idx = 0;
 		for (int i = 0; i < V; i++) {
@@ -80,24 +78,16 @@ void dymwvc() {
 		choose[u] = false;
 		int v = dychoose(cur_count);
 		choose[v] = false;
-		gain[u] = 0;
-		gain[v] = 0;
 		for (int i = 0; i < AL[u].size(); i++) {
 			int neigh = src[AL[u][i]] == u ? des[AL[u][i]] : src[AL[u][i]];
-			if (counter[AL[u][i]] == 1) {
-				gain[u]++;
-				gain[neigh]++;
-			} else {
+			if (counter[AL[u][i]] != 1) {
 				loss[neigh]++;
 			}
 			counter[AL[u][i]]--;
 		}
 		for (int i = 0; i < AL[v].size(); i++) {
 			int neigh = src[AL[v][i]] == v ? des[AL[v][i]] : src[AL[v][i]];
-			if (counter[AL[v][i]] == 1) {
-				gain[v]++;
-				gain[neigh]++;
-			} else {
+			if (counter[AL[v][i]] != 1) {
 				loss[neigh]++;
 			}
 			counter[AL[v][i]]--;
@@ -115,7 +105,6 @@ void dymwvc() {
 					int neigh = src[AL[rm][j]] == rm ? des[AL[rm][j]] : src[AL[rm][j]];
 					if (counter[AL[rm][j]] == 0) {
 						loss[rm]++;
-						gain[neigh]--;
 						valid_score[rm] += w[neigh];
 					} else {
 						loss[neigh]--;
@@ -135,7 +124,6 @@ void dymwvc() {
 					int neigh = src[AL[rm][j]] == rm ? des[AL[rm][j]] : src[AL[rm][j]];
 					if (counter[AL[rm][j]] == 0) {
 						loss[rm]++;
-						gain[neigh]--;
 						valid_score[rm] += w[neigh];
 					} else {
 						loss[neigh]--;
@@ -157,7 +145,8 @@ void dymwvc() {
 
 
 int main() {
-	freopen("input.txt", "r", stdin);
+	start = chrono::steady_clock::now();
+	freopen("./data/C2000.5.txt", "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	for (int i = 0; i < V; i++) {
@@ -182,11 +171,6 @@ int main() {
 					valid_score[j] += w[src[AL[j][i]] == j ? des[AL[j][i]] : src[AL[j][i]]];
 				}
 			}
-		} else {
-			gain[j] = 0;
-			for (int i = 0; i < AL[j].size(); i++) {
-				if (counter[AL[j][i]] == 0) gain[j]++;
-			}
 		}
 	}
 	dymwvc();
@@ -197,7 +181,6 @@ int main() {
 	printf("\n");
 	return 0;
 }
-
 
 void initial() {
 	for (int i = 0; i < E; i++) {
@@ -217,5 +200,4 @@ void initial() {
 		}
 	}
 	memcpy(optimal_choose, choose, sizeof(bool) * V);
-
 }
