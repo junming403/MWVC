@@ -17,4 +17,7 @@ for file in all_file:
             w.write("\n")
             for i in range(E):
                 xx = f.readline().split(" ")
-                w.write(xx[1] + " " + xx[2])
+                u = int(xx[1]) - 1
+                v = int(xx[2]) - 1
+                # print(str(u) + " " + str(v))
+                w.write(str(u) + " " + str(v) + "\n")
