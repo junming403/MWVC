@@ -16,7 +16,7 @@ int src[ELEN], des[ELEN];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
-int alpha = 3;
+int alpha = 5;
 
 double dy_weight[ELEN];
 double loss[4010], gain[4010];
@@ -67,7 +67,7 @@ void dymwvc() {
 	chrono::time_point<chrono::steady_clock> end;
 	while(1) {
 		end = chrono::steady_clock::now();
-		if (((chrono::duration<double>)(end-start)).count() >= 1.99) break;
+		if (((chrono::duration<double>)(end-start)).count() >= 59.99) break;
 
 		double min_loss = 2e9, idx = 0;
 		for (int i = 0; i < V; i++) {
@@ -187,12 +187,13 @@ vector<const char*> dataset = {
 	"./data/c-fat500-10.txt", // 12
 	"./data/gen400_p0.9_75.txt", // 13
 	"./data/hamming10-4.txt", // 14
+	"./data/frb100-40.mis", // 15
 };
 
 
 int main() {
 	start = chrono::steady_clock::now();
-	freopen(dataset[14], "r", stdin);
+	freopen(dataset[5], "r", stdin);
 	scanf("%d%d", &V, &E);
 	AL.assign(V, vi());
 	int sum = 0;
