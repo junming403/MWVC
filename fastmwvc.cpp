@@ -16,7 +16,7 @@ int src[ELEN], des[ELEN];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
-int alpha = 5;
+int alpha = 3;
 
 double dy_weight[ELEN];
 double loss[4010], gain[4010];
@@ -67,7 +67,7 @@ void dymwvc() {
 	chrono::time_point<chrono::steady_clock> end;
 	while(1) {
 		end = chrono::steady_clock::now();
-		if (((chrono::duration<double>)(end-start)).count() >= 59.99) break;
+		if (((chrono::duration<double>)(end-start)).count() >= 1.99) break;
 
 		double min_loss = 2e9, idx = 0;
 		for (int i = 0; i < V; i++) {
