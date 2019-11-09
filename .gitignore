@@ -1,3 +1,5 @@
 input.txt
 raw
 archive
+CMakeLists.txt
+cmake-build-debug
