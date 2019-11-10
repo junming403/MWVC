@@ -34,7 +34,7 @@ dataset = [
 # 	"./data/hamming10-4.txt", # 14
 # 	"./data/frb100-40.mis", # 15
 # ]
-repeat_times = 50
+repeat_times = 51
 optimals = []
 parameters = []
 for id in range(len(dataset)):
