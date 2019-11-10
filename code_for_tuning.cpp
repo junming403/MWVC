@@ -9,7 +9,7 @@
 #include <unordered_set>
 // #include <bits/stdc++.h>
 using namespace std;
-const int ELEN = 1800010;
+const int ELEN = 600010;
 typedef vector<int> vi;
 int w[4010], cp_w[4010];
 int counter[ELEN] = {0};
@@ -17,8 +17,10 @@ int src[ELEN], des[ELEN];
 bool choose[4010] = {0}, optimal_choose[4010] = {0};
 vector<vi> AL;
 int optimal = 0, V, E, cur;
+
 int alpha = 10;
-double dy_choose_mode = 0;
+double dy_start = 0;
+double dy_end = 0;
 
 double dy_weight[ELEN];
 double loss[4010] = {0}, gain[4010] ={0};
@@ -48,8 +50,8 @@ int dychoose(int &cur_count) {
 		chrono::time_point<chrono::steady_clock> end;
 		end = chrono::steady_clock::now();
 		int n_candidate;
-		double div = ((chrono::duration<double>)(end-start)).count() * (dy_choose_mode / 2.0 - 5);
-		n_candidate = max(V / (10 + div), 1.0);
+		double div = ((chrono::duration<double>)(end-start)).count() * ((dy_end-dy_start) / 2.0) + dy_start;
+		n_candidate = max(V / div, 1.0);
 		while (n_candidate > 0) {
 			int i = rng() % V;
 			if (choose[i]) {
@@ -176,29 +178,25 @@ void dymwvc() {
 }
 
 vector<const char*> dataset = {
-	"./data/keller5.txt", // 0
-	"./data/C1000.9.txt", // 1
-	"./data/C500.9.txt", // 2
-	"./data/san200_0.9_1.txt", // 3
-	"./data/san1000.txt", // 4
-	"./data/C2000.5.txt", // 5
-	"./data/p_hat1500-2.txt", // 6
-	"./data/brock800_4.txt", // 7
-	"./data/frb59-26-1.mis", // 8
-	"./data/DSJC1000_5.txt", // 9
-	"./data/MANN_a45.txt", // 10
-	"./data/C2000.9.txt", // 11
-	"./data/c-fat500-10.txt", // 12
-	"./data/gen400_p0.9_75.txt", // 13
-	"./data/hamming10-4.txt", // 14
-	"./data/frb100-40.mis", // 15
+	"./test_case/frb100-40.txt", // 15
+	"./test_case/test1.txt",
+	"./test_case/test2.txt",
+	"./test_case/test3.txt",
+	"./test_case/test4.txt",
+	"./test_case/test5.txt",
+	"./test_case/test6.txt",
+	"./test_case/test7.txt",
+	"./test_case/test8.txt",
+	"./test_case/test9.txt",
+	"./test_case/test10.txt",
 };
 
 
 int main(int argc, char** argv) {
-	alpha = atoi(argv[2]);
 	int fileId = atoi(argv[1]);
-	dy_choose_mode = stod(argv[3]);
+	alpha = atoi(argv[2]);
+	dy_start = stod(argv[3]);
+	dy_end = stod(argv[4]);
 	start = chrono::steady_clock::now();
 	freopen(dataset[fileId], "r", stdin);
 	scanf("%d%d", &V, &E);
