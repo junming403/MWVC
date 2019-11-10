@@ -39,7 +39,7 @@ int main(int argv, char** args)
     printf("%d %d\n", NUM, NUMEDGE); 
 
     for (int i = 0; i < NUM; i++) {
-        printf("%d ", rand() % maxWeight);
+        printf("%d ", 1+(rand() % maxWeight));
     }
     printf("\n");
         
