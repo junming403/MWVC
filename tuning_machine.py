@@ -51,6 +51,8 @@ for alpha in range(2, 21):
         for raw_end in range(3, 21):
             total_median = 0
             end = raw_end * 0.5
+            if (end > start):
+                end = start
             for id in range(len(dataset)):
                 results = []
                 for repeat in range(repeat_times):
