@@ -163,12 +163,15 @@ void dymwvc() {
             }
         }
         cur = cur + costChange;
-        if (cur < optimal) {
-            optimal = cur;
-            memcpy(optimal_choose, choose, sizeof(bool) * V);
-        } else {
-            cur_count++;
-        }
+		if (cur < optimal) {
+			optimal = cur;
+			memcpy(optimal_choose, choose, sizeof(bool) * V);
+		} 
+		if (costChange >= 0) {
+			cur_count++;
+		} else {
+			cur_count = 0;
+		}
     }
 }
 
