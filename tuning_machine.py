@@ -46,9 +46,9 @@ parameters.append([-1, -1, -1])
 
 overall_id = len(dataset)
 
-for alpha in range(2, 21):
-    for start in range(5, 46, 5):
-        for raw_end in range(3, 21):
+for alpha in range(2, 21， 4):
+    for start in range(5, 46, 20):
+        for raw_end in range(3, 21， 4):
             total_median = 0
             end = raw_end * 0.5
             if (end > start):
