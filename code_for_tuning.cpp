@@ -178,17 +178,17 @@ void dymwvc() {
 }
 
 vector<const char*> dataset = {
-	"./test_case/frb100-40.txt", // 15
-	"./test_case/test1.txt",
-	"./test_case/test2.txt",
-	"./test_case/test3.txt",
+	//"./test_case/test1.txt",
+	//"./test_case/test2.txt",
+	//"./test_case/test3.txt",
 	"./test_case/test4.txt",
 	"./test_case/test5.txt",
 	"./test_case/test6.txt",
 	"./test_case/test7.txt",
 	"./test_case/test8.txt",
-	"./test_case/test9.txt",
-	"./test_case/test10.txt",
+	//"./test_case/test9.txt",
+	//"./test_case/test10.txt",
+	//"./test_case/frb100-40.txt", // 15
 };
 
 

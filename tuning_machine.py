@@ -4,17 +4,18 @@ import os
 os.system("g++ -g -O2 -std=gnu++17 code_for_tuning.cpp")
 
 dataset = [
-	"./test_case/frb100-40.txt",
-	"./test_case/test1.txt",
-	"./test_case/test2.txt",
-	"./test_case/test3.txt",
+	# "./test_case/test1.txt",
+	# "./test_case/test2.txt",
+	# "./test_case/test3.txt",
 	"./test_case/test4.txt",
 	"./test_case/test5.txt",
 	"./test_case/test6.txt",
 	"./test_case/test7.txt",
 	"./test_case/test8.txt",
-	"./test_case/test9.txt",
-	"./test_case/test10.txt",
+	# "./test_case/test9.txt",
+	# "./test_case/test10.txt",
+    # "./test_case/frb100-40.txt",
+
 ]
 # dataset = [
 # 	"./data/keller5.txt", # 0
@@ -34,7 +35,7 @@ dataset = [
 # 	"./data/hamming10-4.txt", # 14
 # 	"./data/frb100-40.mis", # 15
 # ]
-repeat_times = 51
+repeat_times = 41
 optimals = []
 parameters = []
 for id in range(len(dataset)):
@@ -46,9 +47,9 @@ parameters.append([-1, -1, -1])
 
 overall_id = len(dataset)
 
-for alpha in range(2, 21， 4):
+for alpha in range(2, 21, 5):
     for start in range(5, 46, 20):
-        for raw_end in range(3, 21， 4):
+        for raw_end in range(3, 21, 5):
             total_median = 0
             end = raw_end * 0.5
             if (end > start):
