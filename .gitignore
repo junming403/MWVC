@@ -3,3 +3,4 @@ raw
 archive
 CMakeLists.txt
 cmake-build-debug
+generator
