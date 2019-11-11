@@ -76,8 +76,8 @@ for alpha in range(2, 21):
                 parameters[overall_id][2] = end
             # print("Checkpoint:" + " overall median = " + str(total_median) + " alpha= " + str(alpha) + " start= " + str(start) + " end= " + str(end) )
             print("CHECKPOINT")
-            print("optimals: " + str(optimals))
-            print("parameters: " + str(parameters))
+            print("optimals: " + str(optimals), flush=True)
+            print("parameters: " + str(parameters), flush=True)
 print("FINAL ANSWER")
-print("optimals: " + str(optimals))
-print("parameters: " + str(parameters))
+print("optimals: " + str(optimals), flush=True)
+print("parameters: " + str(parameters), flush=True)
